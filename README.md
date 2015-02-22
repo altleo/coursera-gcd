@@ -1,4 +1,4 @@
-*run_analysys.R* - **R Programming script**
+*run_analysis.R* - **R Programming script**
 
 "Human Activity Recognition Using Smartphones Data Set"   
 ====================================
