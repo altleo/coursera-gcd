@@ -57,7 +57,7 @@ The following R packages are required:
 The script contains inline comments that document what each line does. In general the script performs the following actions:
 
 - Read the required files from the *dataset* directory into data frames
-- Adds a column variable named **source** to the training and test sets to indicate which set the row data belongs to. This is done so that train and test data can be differentiated when the datasets are merged. This demarcation could be used if subsequent analysis requires analyses to be performed separately on the training sets and the test sets.
+- Adds a column variable named **source** to the training and test sets to indicate which set the row data belongs to. This is considered good practice in any merge exercise. It allows one to identify the source of the data in the merged result. This demarcation could be used if subsequent analysis requires use of the training sets and the test sets in particular explorations.
 - Merges the training and the test sets to create one dataset.
 - Extracts the measurements on the mean and standard deviation for each measurement.
 - Replaces activity codes with activity names
