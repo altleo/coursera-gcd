@@ -27,13 +27,7 @@ dataTestX <- read.table(paste(pathData,"test/X_test.txt",sep="/"),sep="")
 dataAll <- rbind(dataTrainX,dataTestX)
 
 ##########  Read other support files ###################################
-#  Activity labels
-#  Feature Names
-#
-#
-#
-#
-#
+# Activity labels, Feature names
 
 # Read in file containing activity class lables and activity names
 dataActivityNames <- read.table(paste(pathData,"activity_labels.txt",sep="/"),sep="")
