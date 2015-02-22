@@ -13,8 +13,6 @@
 path_data <- "./dataset/"
 
 # load required libraries
-# library(stringr)
-# library(plyr)
 library(reshape2)
 
 ############### Read Files ###############
@@ -83,36 +81,13 @@ data_all <- rbind(data_TrainX,data_TestX)
 
 # Bind the Subjects and Activity list with the combined dataset
 data_all <- cbind(subject_activity_all,data_all)
-
 head(data_all[,1:9])
 tail(data_all[,1:9])
 
 ################# Now we have ALL the data ###############################
 
 ########  Change Feature labels #######
-
 # 4.Appropriately label the data set with descriptive variable names.
-
-# Make the variable names provided more readable by renaming them.
-# a) The feature names supplied contain the characters "()" 
-#  e.g: tBodyAcc-mean()-X, tBodyAcc-std()-X, tBodyAcc-energy()-X and so on
-# To make it easier for humans to read and machines to process, 
-# the feature names (variable names) will be re-written removing the parentheses.
-#  tBodyAcc-mean()-X  becomes tBodyAcc-mean-X
-#  tBodyAcc-std()-X   	=>  tBodyAcc-std-X
-#  tBodyAccMag-mean()	=>  tBodyAccMag-mean
-#
-# b) Feature names contain "-" which may cause problems when used in R scripts.
-# The "-" in feature names are replaced with "_". 
-#	  tBodyAcc-mean()-X  becomes tBodyAcc_mean_X
-#
-# c) Some feature names contain ",". The commas in feature names are replaced with "." 
-# e.g:	fBodyAcc-bandsEnergy()-25,32	=>  fBodyAcc-bandsEnergy()-25_32
-#	tBodyGyroJerk-arCoeff()-X,1	=>  tBodyGyroJerk-arCoeff()-X_1	 
-#
-# d) Some feature names contain the string "BodyBody". This is corrected to "Body" 
-# 
-##################################################
 
 # a) Remove all parentheses
 features <- as.data.frame(gsub("[\\(\\)]+","",features$V2))
@@ -130,12 +105,15 @@ colnames(features) <- c("feature_name")
 features <- as.data.frame(gsub("BodyBody","Body",features$feature_name))      
 colnames(features) <- c("feature_name")
 
+##################################################
+
 ############ Rename Columns in data frame ###################################
 # Rename columns to be human readable and easier for machine processing
-# First 3 columns are already properly named: source, subject, activity
-# Rename from column 4 to end of columns usinf the names prepared in frame features
 
-colnames(data_all)[c(4:ncol(data_all))] <- as.character(features$feature_name)
+# First 3 columns have been assigned appropriate names: **source**, **subject**, **activity**
+# Rename from column 4 to end of columns using the names prepared in frame: **features**
+
+colames(data_all)[c(4:ncol(data_all))] <- as.character(features$feature_name)
 
 # Select subset of columns which contain the measurements on "mean" and "std" 
 col_subset <- as.data.frame(subset(features, grepl("mean|std", features$feature_name), drop = TRUE))
