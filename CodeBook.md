@@ -1,7 +1,5 @@
----
-title: "Data Dictionary"
-output: html_document
----
+Data Dictionary
+===============
 
 ## Column Names
 
