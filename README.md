@@ -1,17 +1,12 @@
----
-title: "Human Activity Recognition Using Smartphones Data Set"   
-subtitle: Script to tidy the data for analysis   
-author: "Leo G Fernandez"    
-output: rmarkdown::html_vignette  
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
----
-*run_analysys.R* - **R Programming script** 
+*run_analysys.R* - **R Programming script**
+
+"Human Activity Recognition Using Smartphones Data Set"   
+====================================
+
+Script to tidy the data for analysis
+------------------------------------
 
 The Human Activity Recognition data set contains recordings of 30 subjects performing activities of daily living (ADL) while carrying a waist-mounted smartphone with embedded inertial sensors.^[UCI - Center for Machine Learning and Intelligent Systems. http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones]
-
 
 The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist.
 An embedded accelerometer and gyroscope captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments were video-recorded and the data labeled  manually.
