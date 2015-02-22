@@ -3,45 +3,98 @@
 #  Author: Leo G Fernandez
 #  Date: 22 Feb 2015
 #
-#
-#
+#  Script to tidy the data set collected from the
+#  "Human Activity Recognition Using Smartphones Data Set"
+#  Data can be obtained from:
+#  https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 #
 #########################################################################
 
-pathData <- "./dataset/"
+path_data <- "./dataset/"
 
 # load required libraries
 # library(stringr)
 # library(plyr)
 library(reshape2)
 
-
+############### Read Files ###############
 # Read in file containing trainX data from train data set
-dataTrainX <- read.table(paste(pathData,"train/X_train.txt",sep="/"),sep="")
+data_TrainX <- read.table(paste(path_data,"train/X_train.txt",sep="/"),sep="")
 # Read in file containing testX data from test data set
-dataTestX <- read.table(paste(pathData,"test/X_test.txt",sep="/"),sep="")
+data_TestX <- read.table(paste(path_data,"test/X_test.txt",sep="/"),sep="")
 
-
-
-#  1. Merges the training and the test sets to create one data set. 
-dataAll <- rbind(dataTrainX,dataTestX)
-
-##########  Read other support files ###################################
-# Activity labels, Feature names
-
+# Read Activity labels, Feature names files
 # Read in file containing activity class lables and activity names
-dataActivityNames <- read.table(paste(pathData,"activity_labels.txt",sep="/"),sep="")
-colnames(dataActivityNames) <- c("activity_id","activity")
+activity_names <- read.table(paste(path_data,"activity_labels.txt",sep="/"),sep="")
+colnames(activity_names) <- c("activity_id","activity")
 
 # Read in file containing list of variable names of each feature vector
-dataFeatVars <- read.table(file=paste(pathData,"features.txt",sep="/"),sep="")
-# txt_features_info <- scan(file=paste(pathData,"features_info.txt",character(0), sep = "\n")
+features <- read.table(file=paste(path_data,"features.txt",sep="/"),sep="")
+# txt_features_info <- scan(file=paste(path_data,"features_info.txt",character(0), sep = "\n")
 
-##########  Rename variables in data set ###################################
+# Read in file containing activity data for train data set
+activity_train <- read.table(paste(path_data,"train/y_train.txt",sep="/"),sep="")
+colnames(activity_train) <- c("activity")
+
+# Read in file containing activity data for test data set
+activity_test <- read.table(paste(path_data,"test/y_test.txt",sep="/"),sep="")
+colnames(activity_test) <- c("activity")
+
+# Merge train and test activity data
+activity_all <- rbind(activity_train,activity_test)
+
+
+########## Read file containing subject identifiers
+# Read in file containing Subject identifiers from train data set
+subject_id_train <- read.table(paste(path_data,"train/subject_train.txt",sep="/"),sep="")
+colnames(subject_id_train) <- c("subject")
+# Read in file containing Subject identifiers from test data set
+subject_id_test <- read.table(paste(path_data,"test/subject_test.txt",sep="/"),sep="")
+colnames(subject_id_test) <- c("subject")
+
+# Add a variable called "source" to subject_id_trainand subject_id_test  
+# so that train and test data can be differentiated when the datasets are merged.
+subject_id_train<- cbind(source="train",subject_id_train )
+subject_id_test <- cbind(source="test",subject_id_test)
+
+# Merge the subjects of train and test data into one frame
+subject_id_all <- rbind(subject_id_train ,subject_id_test)
+
+# 3. Uses descriptive activity names to name the activities in the data set
+# Recode activity column - replace activity class codes with corresponding name strings
+# Over-write existing column 
+activity_all$activity <-  activity_names[match(as.character(activity_all$activity),  
+						  activity_names$activity_id), 'activity']
+
+activity_all$activity <- as.factor(activity_all$activity)
+# activity_all
+# str(activity_all)
+
+############### Merge datasets ###############
+
+# Merge Activity names to combined Subject list
+subject_activity_all <- cbind(subject_id_all,activity_all)
+
+head(subject_activity_all)
+tail(subject_activity_all)
+
+#  1. Merge the training and the test sets to create one data set. 
+data_all <- rbind(data_TrainX,data_TestX)
+
+# Bind the Subjects and Activity list with the combined dataset
+data_all <- cbind(subject_activity_all,data_all)
+
+head(data_all[,1:9])
+tail(data_all[,1:9])
+
+################# Now we have ALL the data ###############################
+
+########  Change Feature labels #######
 
 # 4.Appropriately label the data set with descriptive variable names.
-# Make the variable names provided more manageable by renaming them.
-# The feature names supplied contain the characters "()" 
+
+# Make the variable names provided more readable by renaming them.
+# a) The feature names supplied contain the characters "()" 
 #  e.g: tBodyAcc-mean()-X, tBodyAcc-std()-X, tBodyAcc-energy()-X and so on
 # To make it easier for humans to read and machines to process, 
 # the feature names (variable names) will be re-written removing the parentheses.
@@ -49,109 +102,73 @@ dataFeatVars <- read.table(file=paste(pathData,"features.txt",sep="/"),sep="")
 #  tBodyAcc-std()-X   	=>  tBodyAcc-std-X
 #  tBodyAccMag-mean()	=>  tBodyAccMag-mean
 #
-# Some feature names contain ",". The commas in feature names are replaced with "." 
+# b) Feature names contain "-" which may cause problems when used in R scripts.
+# The "-" in feature names are replaced with "_". 
+#	  tBodyAcc-mean()-X  becomes tBodyAcc_mean_X
+#
+# c) Some feature names contain ",". The commas in feature names are replaced with "." 
 # e.g:	fBodyAcc-bandsEnergy()-25,32	=>  fBodyAcc-bandsEnergy()-25_32
 #	tBodyGyroJerk-arCoeff()-X,1	=>  tBodyGyroJerk-arCoeff()-X_1	 
-#  
+#
+# d) Some feature names contain the string "BodyBody". This is corrected to "Body" 
+# 
+##################################################
 
 # a) Remove all parentheses
-dataFeatVars <- as.data.frame(gsub("[\\(\\)]+","",dataFeatVars$V2))
-colnames(dataFeatVars) <- c("FeatureName")
-# b) Replace comma with underscore character
-dataFeatVars <- as.data.frame(gsub(",",".",dataFeatVars$FeatureName))      
-colnames(dataFeatVars) <- c("FeatureName")
+features <- as.data.frame(gsub("[\\(\\)]+","",features$V2))
+colnames(features) <- c("feature_name")
 
-############ Rename Columns ###################################
+# b) Replace "-" with underscore character
+features <- as.data.frame(gsub("-","_",features$feature_name))      
+colnames(features) <- c("feature_name")
+
+# c) Replace comma with underscore character
+features <- as.data.frame(gsub(",",".",features$feature_name))      
+colnames(features) <- c("feature_name")
+
+# d) Replace "BodyBody" with "Body"
+features <- as.data.frame(gsub("BodyBody","Body",features$feature_name))      
+colnames(features) <- c("feature_name")
+
+############ Rename Columns in data frame ###################################
 # Rename columns to be human readable and easier for machine processing
-colnames(dataAll) <- dataFeatVars[,1]
+# First 3 columns are already properly named: source, subject, activity
+# Rename from column 4 to end of columns usinf the names prepared in frame features
 
-# Extract only the measurements on "mean" and "std" 
-# subF <- subset(dataFeatVars, dataFeatVars[,FeatureName] %in% c("mean", "std"), drop = TRUE) 
+colnames(data_all)[c(4:ncol(data_all))] <- as.character(features$feature_name)
 
-dataExtracted <- as.data.frame(subset(dataFeatVars, grepl("mean|std", dataFeatVars$FeatureName), drop = TRUE))
-colnames(dataExtracted) <- c("FeatureName")
-dataExtracted <- as.data.frame(subset(dataExtracted, !grepl("meanFreq", dataExtracted$FeatureName), drop = TRUE))
-colnames(dataExtracted) <- c("FeatureName")
-
-########## subF contains the Feture names / variabe names to be extracted to tidy data
-
-# Read in file containing Subject identifiers from train data set
-dataSubjectTrain <- read.table(paste(pathData,"train/subject_train.txt",sep="/"),sep="")
-colnames(dataSubjectTrain) <- c("subject")
-# Read in file containing Subject identifiers from test data set
-dataSubjectTest <- read.table(paste(pathData,"test/subject_test.txt",sep="/"),sep="")
-
-colnames(dataSubjectTest) <- c("subject")
-
-# Add a column variable to dataSubjectTrain and dataSubjectTest  
-# so that train and test data can be differentiated when the datasets are merged.
-dataSubjectTrain <- cbind(dataset="train",dataSubjectTrain)
-dataSubjectTest <- cbind(dataset="test",dataSubjectTest)
-
-# Merge the subjects of train and test data into one frame
-dataSubjectAll <- rbind(dataSubjectTrain,dataSubjectTest)
-
-# Read in file containing activity data for train data set
-dataActivityTrain <- read.table(paste(pathData,"train/y_train.txt",sep="/"),sep="")
-colnames(dataActivityTrain) <- c("activity")
-
-# Read in file containing activity data for test data set
-dataActivityTest <- read.table(paste(pathData,"test/y_test.txt",sep="/"),sep="")
-colnames(dataActivityTest) <- c("activity")
-
-# Merge train and test activity data
-dataActivity <- rbind(dataActivityTrain,dataActivityTest)
-
-# 3. Uses descriptive activity names to name the activities in the data set
-# Recode activity column - replace activity class codes with corresponding name strings
-# Over-write existing column 
-dataActivity$activity <-  dataActivityNames[match(as.character(dataActivity$activity),  
-				dataActivityNames$activity_id), 'activity']
-				dataActivity$activity <- as.factor(dataActivity$activity)
-# dataActivity
-# str(dataActivity)
-
-# Merge Activity names to combined Subject list
-dataSubjectActivityAll <- cbind(dataSubjectAll,dataActivity)
-
-# Bind the Subjects and Activity list with the combined dataset
-dataAll <- cbind(dataSubjectActivityAll,dataAll)
-
-# head(dataAll[,1:8])
-# tail(dataAll[,1:8])
-################# Now we hav ALL the data ###############################
+# Select subset of columns which contain the measurements on "mean" and "std" 
+col_subset <- as.data.frame(subset(features, grepl("mean|std", features$feature_name), drop = TRUE))
+colnames(col_subset) <- c("feature_name")
+col_subset <- as.data.frame(subset(col_subset, !grepl("meanFreq", col_subset$feature_name), drop = TRUE))
+colnames(col_subset) <- c("feature_name")
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 # Search of "mean" OR "std" in column names
 
-dataSubset <- dataAll[,grepl("dataset|subject|activity|mean|std", colnames(dataAll))]
+# Retain only the columns that required columns:  
+data_subset <- data_all[,grepl("source|subject|activity|mean|std", colnames(data_all))]
+# **NOTE**: Though we include the column 'source' in the subset to indicate 
+#           if data is from 'train or 'test' set, this column is not used in the final output.
+#           However, the column is available in the subsetted data just in case we
+#           will to work with 'train' and 'test' sets.
 
 # Check the dataset
-head(dataSubset[,1:6])
-tail(dataSubset[,1:6])
+head(data_subset[,1:6])
+tail(data_subset[,1:6])
 
 # 5. Create an independent tidy data set with the average 
 #      of each variable for each activity and subject
 
-dataMelted <- melt(dataSubset,id=c("dataset","subject","activity"))
+data_melted <- melt(data_subset,id=c("source","subject","activity"))
 
-d1 <- dcast(dataMelted, dataset ~ variable)
-d2 <- dcast(dataMelted, subject ~ variable)
-d3 <- dcast(dataMelted, activity ~ variable)
-
-d4 <- dcast(dataMelted, activity + subject ~ variable)
-
-d5 <- dcast(dataMelted, dataset + activity + subject ~ variable,mean)
-
-data_mean <- dcast(dataMelted,activity + subject ~ variable,mean)
+data_mean <- dcast(data_melted,activity + subject ~ variable,mean)
 
 # Write the tidy data set to a table without row names 
 write.table(data_mean,"./tidy_activity_data.txt", row.names = FALSE)
 
-write.table(data_mean,"./tidy_activity_data_row.txt", row.names = TRUE)
-
 ## To View the produced output in R:
-#  data <- read.table("./tidy_activity_data.txt", header = TRUE)
-#  View(data)
+# data <- read.table("./tidy_activity_data.txt", header = TRUE)
+# View(data)
 
 
