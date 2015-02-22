@@ -1,7 +1,7 @@
 Data Dictionary
 ===============
 
-## Column Names
+## Feature Names
 
 Only the columns that contained measures of **mean()**, **std()** and **meanFreq()** from the original data set were extracted to produce the output.
 
@@ -11,7 +11,9 @@ The README file details the convention used to change the supplied Feature names
 
 For more information on the measures represented in the output column, look up the **features_info.txt** file using the **Supplied Feature Name** given below. The file **features_info.txt** is available in the dataset directory of the original data that can be downloaded from: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 
-Col No. | Supplied Feature Name | Column Name in output file
+Note: Features are normalized and bounded within [-1:1].
+
+Col No. | Supplied Feature Name | Feature Name in output file
 ---- | ---- | ------
 1|NA|activity
 2|NA|subject
