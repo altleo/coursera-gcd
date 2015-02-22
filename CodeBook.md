@@ -96,3 +96,4 @@ Col No. | Supplied Feature Name | Column Name in output file
 79|fBodyBodyGyroJerkMag-mean()|fBodyGyroJerkMag_mean
 80|fBodyBodyGyroJerkMag-std()|fBodyGyroJerkMag_std
 81|fBodyBodyGyroJerkMag-meanFreq()|fBodyGyroJerkMag_meanFreq
+

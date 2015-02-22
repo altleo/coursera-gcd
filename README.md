@@ -33,7 +33,7 @@ The dataset was randomly partitioned into two sets, where 70% of the volunteers 
 
 ## Function of the script:
 
-The obtained data set is not in a form suitable for processing. The data is not normalized and is spread across disparate and directories. The variable names attached to the data contain characters that could choke an R script (eg: "(),-" etc..). The variable names are also not easy to read.
+The supplied data set is not in a form suitable for processing. The data is not normalized and is spread across disparate files and directories. The variable names attached to the data contain characters that could choke an R script (eg: "(),-" etc..).
 
 The run_analysis.R script reads data from the "Human Activity Recognition Using Smartphones Dataset"<sup>2</sup> and produces a tidy data set using improved variable naming convention and reshaping the data so that it is suitable  for further analysis. 
 
@@ -45,7 +45,7 @@ The file *tidy_activity_data.txt* contains the output produced when the R script
 
 A sub-directory named *dataset* in the directory from where the *run_analysis.R* script is run.
 
-The *dataset* directory should contain the files and sub-directories lited above in the section **Input Data Set Files**
+The *dataset* directory should contain the files and sub-directories lisVted above in the section **Input Data Set Files**
 
 The following R packages are required:
 
@@ -57,36 +57,36 @@ The following R packages are required:
 The script contains inline comments that document what each line does. In general the script performs the following actions:
 
 - Read the required files from the *dataset* directory into data frames
-- Adds a column variable named 'dataset' to the training and test sets to indicate which set the data belongs to. This is done so that train and test data can be differentiated when the datasets are merged. This demarcation could be used if subsequent analysis requires analyses to be performed separately on the training sets and the test sets.
+- Adds a column variable named **source** to the training and test sets to indicate which set the row data belongs to. This is done so that train and test data can be differentiated when the datasets are merged. This demarcation could be used if subsequent analysis requires analyses to be performed separately on the training sets and the test sets.
 - Merges the training and the test sets to create one dataset.
 - Extracts the measurements on the mean and standard deviation for each measurement.
 - Replaces activity codes with activity names
 
 - Renames the variables so that they are more descriptive and are free of characters that could cause problems when used in R scripts.
 
-a) The feature names supplied, contain the characters "()" 
-
-	e.g: tBodyAcc-mean()-X, tBodyAcc-std()-X, tBodyAcc-energy()-X and so on
-
-   To make it easier for humans to read and machines to process, 
-   the feature names (variable names) will be re-written removing the parentheses.
-
-	tBodyAcc-mean()-X  becomes tBodyAcc-mean-X
- 	tBodyAcc-std()-X   	=>  tBodyAcc-std-X
- 	tBodyAccMag-mean()	=>  tBodyAccMag-mean
-
-b) Feature names contain "-" which may cause problems when used in R scripts.
-   The "-" in feature names are replaced with "_". 
- 	
- 	tBodyAcc-mean()-X  becomes tBodyAcc_mean_X
-
-
-c) Some feature names contain ",". The commas in feature names are replaced with "."
-
-	e.g:	fBodyAcc-bandsEnergy()-25,32	=>  fBodyAcc-bandsEnergy()-25_32
-		tBodyGyroJerk-arCoeff()-X,1	=>  tBodyGyroJerk-arCoeff()-X_1	 
-
-d) Some feature names contain the string "BodyBody". This is changed to "Body" 
+	a) The feature names supplied, contain the characters "()" 
+	
+		e.g: tBodyAcc-mean()-X, tBodyAcc-std()-X, tBodyAcc-energy()-X and so on
+	
+	   To make it easier for humans to read and machines to process, 
+	   the feature names (variable names) will be re-written removing the parentheses.
+	
+		tBodyAcc-mean()-X  becomes tBodyAcc-mean-X
+	 	tBodyAcc-std()-X   	=>  tBodyAcc-std-X
+	 	tBodyAccMag-mean()	=>  tBodyAccMag-mean
+	
+	b) Feature names contain "-" which may cause problems when used in R scripts.
+	   The "-" in feature names are replaced with "_". 
+	 	
+	 	tBodyAcc-mean()-X  becomes tBodyAcc_mean_X
+	
+	
+	c) Some feature names contain ",". The commas in feature names are replaced with "."
+	
+		e.g:	fBodyAcc-bandsEnergy()-25,32	=>  fBodyAcc-bandsEnergy()-25.32
+			tBodyGyroJerk-arCoeff()-X,1	=>  tBodyGyroJerk-arCoeff()-X.1	 
+	
+	d) Some feature names contain the string "BodyBody". This is changed to "Body" 
 
 
 ## Acknowledgements:
