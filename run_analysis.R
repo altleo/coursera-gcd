@@ -113,7 +113,7 @@ colnames(features) <- c("feature_name")
 # First 3 columns have been assigned appropriate names: **source**, **subject**, **activity**
 # Rename from column 4 to end of columns using the names prepared in frame: **features**
 
-colames(data_all)[c(4:ncol(data_all))] <- as.character(features$feature_name)
+colnames(data_all)[c(4:ncol(data_all))] <- as.character(features$feature_name)
 
 # Select subset of columns which contain the measurements on "mean" and "std" 
 col_subset <- as.data.frame(subset(features, grepl("mean|std", features$feature_name), drop = TRUE))
