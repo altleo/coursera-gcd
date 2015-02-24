@@ -45,7 +45,7 @@ The file *tidy_activity_data.txt* contains the output produced when the R script
 
 A sub-directory named *dataset* in the directory from where the *run_analysis.R* script is run.
 
-The *dataset* directory should contain the files and sub-directories lisVted above in the section **Input Data Set Files**
+The *dataset* directory should contain the files and sub-directories listed above in the section **Input Data Set Files**
 
 The following R packages are required:
 
@@ -99,7 +99,7 @@ The run_analysis.R script is free to use and modify.
 
 Restrictions (if any) for re-distribution of this script is governed by the terms of the *Getting and Cleaning Data Course Project* conducted at **COURSERA**.<sup>3</sup>
 
-The data file "tidy_activity_data.txt", if used to produce work for any publications must be acknowledge and reference the source of the original data set.<sup>4</sup> 
+The data file "tidy_activity_data.txt", if used to produce work for any publications must acknowledge and reference the source of the original data set.<sup>4</sup> 
 
 This script and the dataset output by it, is distributed AS-IS and no responsibility implied or explicit can be addressed to the author for its use or misuse.
 
